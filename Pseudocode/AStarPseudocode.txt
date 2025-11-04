@@ -1,0 +1,50 @@
+SUBROUTINE A_star(start, end, grid):
+    INITIALISE open_set = PriorityQueue() // nodes to be evaluated
+    open_set.enqueue(start, priority=0)
+
+    path = {} // stores the best path to a node
+    gScore = {} // cost from one node to another node
+    gScore[start] = 0
+    fScore = {} // estimated total cost (gScore + heuristic)
+    fScore[start] = heuristic(start, end)
+
+    WHILE NOT open_set.isEmpty():
+        current_node = open_set.popLowestPriority()
+
+        IF current_node == end:
+            sequence = []
+            WHILE current_node IN path:
+                sequence.append(current_node)
+                current_node = path[current_node]
+            ENDWHILE
+            RETURN reverse(sequence)
+        ENDIF
+
+        neighbours = []
+        FOR EACH adjacent_cell IN (UP, DOWN, LEFT, RIGHT):
+            IF adjacent_cell WITHIN grid AND adjacent_cell IS NOT obstacle:
+                neighbours.append(adjacent_cell)
+            ENDIF
+        ENDFOR
+
+        FOR neighbour in neighbours:
+            new_gScore = gScore[current_node] + 1
+            IF neighbour NOT IN gScore OR new_gScore < gScore[neighbour]:
+                gScore[neighbour] = new_gScore
+                fScore[neighbour] = gScore[neighbour] + heuristic(neighbour, end)
+                path[neighbour] = current_node
+                IF neighbour NOT IN openSET:
+                    open_set.enqueue(neighbour, priority=fScore[neighbour])
+                ENDIF
+            ENDIF
+        ENDFOR
+    ENDWHILE
+
+    RETURN null // if no path can be found, the mob cannot move towards the player
+ENDSUBROUTINE
+
+SUBROUTINE heuristic(start, end):
+    RETURN ABS(start.x - end.x) + ABS(start.y - end.y)
+ENDSUBROUTINE
+
+path = A_Star(start, end, grid)

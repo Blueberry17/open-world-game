@@ -1,0 +1,44 @@
+SUBROUTINE generate_voronoi():
+    INITIALISE seeds_queue
+    INITIALISE voronoi_points[noise_map.height][noise_map.width]
+    step = ROUNDUP(MAX(height, width)/2)
+
+    FOR point_index 1 TO total_points:
+        new_point = (randint(0, noise_map.width-1), randint(0, noise_map.height-1))
+        new_biome = random.choose(biome_list)
+        voronoi_points[point_index] = (biome=new_biome, distance=0)
+        seeds_queue.enqueue((origin=new_point, position=new_point, biome=new_biome, step))
+    ENDFOR
+
+    RETURN seeds_queue, voronoi_points
+ENDSUBROUTINE
+
+seeds_queue, voronoi_points = generate_voronoi()
+
+WHILE NOT seeds_queue.isEmpty():
+    origin, position, biome = seeds_queue.dequeue()
+    FOR EACH (dx, dy) IN cartesian_product({-step, 0, step}, {-step, 0, step}):
+
+        multiplier = 1
+        WHILE (nx, ny) NOT IN voronoi_points and (dx * multiplier >= 1 OR dy * multiplier >= 1):
+            nx = position[0] + dx * multiplier
+            ny = position[1] + dy * multiplier
+            multiplier /= 2
+
+        IF (nx, ny) IN voronoi_points:
+            to_change = True
+            IF voronoi_points[ny][nx] IS NOT NULL:
+                new_distance = abs((nx, ny) - origin)
+                IF voronoi_points[ny][nx].distance <= new_distance:
+                    to_change = False
+                ENDIF
+
+            IF to_change:
+                voronoi_points[ny][nx] = (biome=biome, distance=new_distance)
+                if step > 1:
+                    seeds_queue.enqueue((origin=origin, position=(nx, ny), biome=biome, step//2)
+            ENDIF
+
+        ENDIF
+    ENDFOR
+ENDWHILE
