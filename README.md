@@ -17,9 +17,13 @@ More advanced gameplay:
 <img width="452" height="469" alt="image" src="https://github.com/user-attachments/assets/3fcce6a0-eca9-4d0d-8774-0f25c30a4538" />
 
 
-## Procedural generation prototyping (Perlin noise and Voronoi Diagrams)
+## Procedural generation prototyping
+
+Perlin noise:
 
 <img width="452" height="243" alt="image" src="https://github.com/user-attachments/assets/4e179564-b650-446a-8633-5ba6e4ff3f20" />
+
+Combined with Voronoi diagrams:
 
 <img width="452" height="451" alt="image" src="https://github.com/user-attachments/assets/07a34cf9-0cbc-4141-a3d5-cf06be866a52" />
 
